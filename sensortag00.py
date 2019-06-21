@@ -421,25 +421,25 @@ import json
 import paho.mqtt.client as paho
 
 host = "127.0.0.1"  # Endpoint
-port = 1883                                              # Port no.
-clientId = "our_pi"                                         # Thing_Name
-thingName = "our_pi"                                        # Thing_Name
-caPath = "root-ca.pem"                                      # Root_CA_Certificate_Name
-certPath = "cer.pem.crt"                                    # <Thing_Name>.cert.pem
-keyPath = "private.pem.key"                                 # <Thing_Name>.private.key
+username = "yolanda"
+mqttPwd = "123456"
+port = 1883                                             # Port no.
+caPath = "root-ca.pem"                                  # Root_CA_Certificate_Name
+certPath = "cer.pem.crt"                                # <Thing_Name>.cert.pem
+keyPath = "private.pem.key"                             # <Thing_Name>.private.key
 
-def on_connect(client, userdata, flags, rc):                # func for making connection
+def on_connect(client, userdata, flags, rc):            # func for making connection
     print("Connection returned result: " + str(rc) )
  
-def on_message(client, userdata, msg):                      # Func for Sending msg
+def on_message(client, userdata, msg):                  # Func for Sending msg
     print(msg.topic+" "+str(msg.payload))
 
 mqttc = paho.Client()                                   # mqttc object
 mqttc.on_connect = on_connect                           # assign on_connect func
 mqttc.on_message = on_message                           # assign on_message func
 #mqttc.tls_set(caPath, certfile=certPath, keyfile=keyPath, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)  # pass parameters
-mqttc.username_pw_set("yolanda", password="123456")
-mqttc.connect(host, port, keepalive=60)           # connect to aws server
+mqttc.username_pw_set(username, password = mqttPwd)
+mqttc.connect(host, port, keepalive=60)                 # connect to aws server
 mqttc.loop_start()                                      # Start the loop
 
 devices_mac = ["98:07:2d:2f:e1:05", "54:6c:0e:80:67:87"]
@@ -459,7 +459,7 @@ def printInfoFromSensorTag(name, Peripheral):
     while True:
         newInfo = {"tag": name, "temperature": tag.IRtemperature.read(), "humidity": tag.humidity.read(), "barometer": tag.barometer.read(), "light": tag.lightmeter.read()}
         print(json.dumps(newInfo))
-        mqttc.publish(name, json.dumps(newInfo))
+        mqttc.publish("sensortags/" + name, json.dumps(newInfo))
         counter += 1
         if counter > 100:
             break
