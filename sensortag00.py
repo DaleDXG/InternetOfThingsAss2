@@ -438,7 +438,7 @@ mqttc = paho.Client()                                   # mqttc object
 mqttc.on_connect = on_connect                           # assign on_connect func
 mqttc.on_message = on_message                           # assign on_message func
 #mqttc.tls_set(caPath, certfile=certPath, keyfile=keyPath, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)  # pass parameters
-mqttc.username_pw_set(username, password = mqttPwd)
+mqttc.username_pw_set("yolanda", password = "123456")
 mqttc.connect(host, port, keepalive=60)                 # connect to aws server
 mqttc.loop_start()                                      # Start the loop
 
