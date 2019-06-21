@@ -8,30 +8,7 @@ from random import uniform
 import json
 
 
-#### local mosquitto parameters ####
-host_local = '127.0.0.1'
-username_local = 'yolanda'
-mqttPwd_local = '123456'
-
-def on_connect_local(client, userdata, flags, rc):
-    print("Connected with result code " + str(rc))
-    client.subscribe("tag1")
-    client.subscribe("tag2")
-
-def on_message_local(client, userdata, msg):
-    print("on_message")
-    print(msg.topic + " " + str(msg.payload))
-
-mqttc_local = paho_client.Client()
-mqttc_local.username_pw_set("yolanda", password = "123456")
-mqttc_local.on_connect = on_connect_local
-mqttc_local.on_message = on_message_local
-#mqttc_local.tls_set()
-mqttc_local.connect(host_local, 1883, 60)
-
-
-mqttc_local.loop_forever()
-
+#### AWS
 connflag = False
 
 def on_connect_aws(client, userdata, flags, rc):            # func for making connection
@@ -41,7 +18,8 @@ def on_connect_aws(client, userdata, flags, rc):            # func for making co
     print("Connection returned result: " + str(rc) )
 
 def on_message_aws(client, userdata, msg):                  # Func for Sending msg
-    print(msg.topic+" "+str(msg.payload))
+    print("on_message_aws")
+    #print(msg.topic+" "+str(msg.payload))
 
 mqttc_aws = paho_client.Client()                                   # mqttc object
 mqttc_aws.on_connect = on_connect_aws                       # assign on_connect func
@@ -56,12 +34,34 @@ caPath = "root-ca.pem"                                      # Root_CA_Certificat
 certPath = "cer.pem.crt"                                    # <Thing_Name>.cert.pem
 keyPath = "private.pem.key"                                 # <Thing_Name>.private.key
 
-# mqttc_aws.tls_set(caPath, certfile=certPath, keyfile=keyPath, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)  # pass parameters
+mqttc_aws.tls_set(caPath, certfile=certPath, keyfile=keyPath, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)  # pass parameters
 
-# mqttc_aws.connect(awshost, awsport, keepalive=60)         # connect to aws server
+mqttc_aws.connect(awshost, awsport, keepalive=60)         # connect to aws server
 
-# mqttc_aws.loop_start()
+mqttc_aws.loop_start()
 
-#while True:
-    # if connflag == True:
-    #     pass
+#### local mosquitto parameters ####
+host_local = '127.0.0.1'
+username_local = 'yolanda'
+mqttPwd_local = '123456'
+
+def on_connect_local(client, userdata, flags, rc):
+    print("Connected with result code " + str(rc))
+    client.subscribe("tag1")
+    client.subscribe("tag2")
+
+def on_message_local(client, userdata, msg):
+    print("on_message")
+    print(msg.topic + " " + str(msg.payload))
+    mqttc_aws.publish(msg.topic, msg.payload)
+
+mqttc_local = paho_client.Client()
+mqttc_local.username_pw_set("yolanda", password = "123456")
+mqttc_local.on_connect = on_connect_local
+mqttc_local.on_message = on_message_local
+#mqttc_local.tls_set()
+mqttc_local.connect(host_local, 1883, 60)
+
+
+mqttc_local.loop_forever()
+
