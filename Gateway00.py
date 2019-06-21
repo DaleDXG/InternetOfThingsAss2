@@ -47,8 +47,7 @@ mqttPwd_local = '123456'
 
 def on_connect_local(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
-    client.subscribe("tag1")
-    client.subscribe("tag2")
+    client.subscribe("tag")
 
 def on_message_local(client, userdata, msg):
     print("on_message")
