@@ -15,13 +15,12 @@ mqttPwd_local = '123456'
 
 def on_connect_local(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
-    client.subscribe("tag01")
-    client.subscribe("tag02")
+    client.subscribe("tag1")
+    client.subscribe("tag2")
 
 def on_message_local(client, userdata, msg):
     print("on_message")
-    msg = json.loads(msg.payload)
-    print(msg)
+    print(msg.topic + " " + str(msg.payload))
 
 mqttc_local = paho_client.Client()
 mqttc_local.username_pw_set("yolanda", password = "123456")
@@ -31,7 +30,7 @@ mqttc_local.on_message = on_message_local
 mqttc_local.connect(host_local, 1883, 60)
 
 
-mqttc_local.loop_start()
+mqttc_local.loop_forever()
 
 connflag = False
 
