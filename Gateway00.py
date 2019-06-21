@@ -15,11 +15,11 @@ mqttPwd_local = '123456'
 
 def on_connect_local(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
-    mqttc_local.subscribe("sensortags")
+    mqttc_local.subscribe("tags")
 
 def on_message_local(client, userdata, msg):
     print("on_message")
-    msg = json.loads(msg.payload)["msg"]
+    msg = json.loads(msg.payload)
     print(msg)
 
 mqttc_local = paho_client.Client()
@@ -27,7 +27,10 @@ mqttc_local.username_pw_set(username_local, mqttPwd_local)
 mqttc_local.on_connect = on_connect_local
 mqttc_local.on_message = on_message_local
 mqttc_local.tls_set()
-mqttc_local.connect(host, 1883, 60)
+mqttc_local.connect(host_local, 1883, 60)
+
+
+mqttc_local.loop_forever()
 
 connflag = False
 
@@ -60,5 +63,6 @@ keyPath = "private.pem.key"                                 # <Thing_Name>.priva
 # mqttc_aws.loop_start()
 
 while True:
+    pass
     # if connflag == True:
     #     pass

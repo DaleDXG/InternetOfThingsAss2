@@ -459,7 +459,7 @@ def printInfoFromSensorTag(name, Peripheral):
     while True:
         newInfo = {"tag": name, "temperature": tag.IRtemperature.read(), "humidity": tag.humidity.read(), "barometer": tag.barometer.read(), "light": tag.lightmeter.read()}
         print(json.dumps(newInfo))
-        mqttc.publish("tags" + name, json.dumps(newInfo))
+        mqttc.publish("tags/" + name, json.dumps(newInfo))
         counter += 1
         if counter > 100:
             break
