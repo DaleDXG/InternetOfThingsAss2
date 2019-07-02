@@ -8,7 +8,15 @@ from random import uniform
 import json
 
 
-#### AWS
+#### AWS parameters #### 
+awshost = "a2rbctfgaq78we-ats.iot.us-east-2.amazonaws.com"  # Endpoint
+awsport = 8883                                              # Port no.   
+clientId = "gateway"                                        # Thing_Name
+thingName = "gateway"                                       # Thing_Name
+caPath = "root-ca.pem"                                      # Root_CA_Certificate_Name
+certPath = "cer.pem.crt"                                    # <Thing_Name>.cert.pem
+keyPath = "private.pem.key"                                 # <Thing_Name>.private.key
+
 connflag = False
 
 def on_connect_aws(client, userdata, flags, rc):            # func for making connection
@@ -25,20 +33,8 @@ mqttc_aws = paho_client.Client()                                   # mqttc objec
 mqttc_aws.on_connect = on_connect_aws                       # assign on_connect func
 mqttc_aws.on_message = on_message_aws
 
-#### AWS parameters #### 
-awshost = "a2rbctfgaq78we-ats.iot.us-east-2.amazonaws.com"  # Endpoint
-awsport = 8883                                              # Port no.   
-clientId = "gateway"                                        # Thing_Name
-thingName = "gateway"                                       # Thing_Name
-caPath = "root-ca.pem"                                      # Root_CA_Certificate_Name
-certPath = "cer.pem.crt"                                    # <Thing_Name>.cert.pem
-keyPath = "private.pem.key"                                 # <Thing_Name>.private.key
-
 mqttc_aws.tls_set(caPath, certfile=certPath, keyfile=keyPath, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)  # pass parameters
-
 mqttc_aws.connect(awshost, awsport, keepalive=60)         # connect to aws server
-
-mqttc_aws.loop_start()
 
 #### local mosquitto parameters ####
 host_local = '127.0.0.1'
@@ -62,5 +58,6 @@ mqttc_local.on_message = on_message_local
 mqttc_local.connect(host_local, 1883, 60)
 
 
-mqttc_local.loop_forever()
+mqttc_local.loop_start()
+mqttc_aws.loop_forever()
 
