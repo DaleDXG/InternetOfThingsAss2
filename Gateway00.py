@@ -37,7 +37,7 @@ mqttc_aws.tls_set(caPath, certfile=certPath, keyfile=keyPath, cert_reqs=ssl.CERT
 mqttc_aws.connect(awshost, awsport, keepalive=60)         # connect to aws server
 
 #### local mosquitto parameters ####
-host_local = '127.0.0.1'
+host_local = 'jc_pi' #'127.0.0.1'
 username_local = 'yolanda'
 mqttPwd_local = '123456'
 
@@ -54,8 +54,8 @@ mqttc_local = paho_client.Client()
 mqttc_local.username_pw_set("yolanda", password = "123456")
 mqttc_local.on_connect = on_connect_local
 mqttc_local.on_message = on_message_local
-#mqttc_local.tls_set()
-mqttc_local.connect(host_local, 1883, 60)
+mqttc_local.tls_set("/etc/mosquitto/ca_certificates/ca.crt")
+mqttc_local.connect(host_local, 8883, 60)
 
 
 mqttc_local.loop_start()
