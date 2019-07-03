@@ -459,7 +459,7 @@ def printInfoFromSensorTag(name, Peripheral):
     while True:
         now = int(round(time.time()*1000))
         local_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(now/1000))
-        newInfo = {"timestamp": local_time, "tag": name, "temperature": tag.IRtemperature.read(), "humidity": tag.humidity.read(), "barometer": tag.barometer.read(), "light": tag.lightmeter.read()}
+        newInfo = {"detected_time": local_time, "tag": name, "temperature": tag.IRtemperature.read(), "humidity": tag.humidity.read(), "barometer": tag.barometer.read(), "light": tag.lightmeter.read()}
         print(json.dumps(newInfo))
         mqttc.publish("tag", json.dumps(newInfo))
         counter += 1
