@@ -437,7 +437,7 @@ def on_message(client, userdata, msg):                  # Func for Sending msg
 mqttc = paho.Client()                                   # mqttc object
 mqttc.on_connect = on_connect                           # assign on_connect func
 mqttc.on_message = on_message                           # assign on_message func
-mqttc.tls_set("/etc/mosquitto/ca_certificates/ca.crt")  # pass parameters
+mqttc.tls_set("/home/pi/ca.crt")  # pass parameters
 mqttc.username_pw_set("yolanda", password = "123456")
 mqttc.connect(host, port, keepalive=60)                 # connect to aws server
 mqttc.loop_start()                                      # Start the loop
