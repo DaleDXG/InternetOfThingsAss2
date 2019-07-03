@@ -420,10 +420,10 @@ import threading
 import json
 import paho.mqtt.client as paho
 
-host = "127.0.0.1"  # Endpoint
+host = "jc_pi" #"127.0.0.1"  # Endpoint
 username = "yolanda"
 mqttPwd = "123456"
-port = 1883                                             # Port no.
+port = 8883                                             # Port no.
 caPath = "root-ca.pem"                                  # Root_CA_Certificate_Name
 certPath = "cer.pem.crt"                                # <Thing_Name>.cert.pem
 keyPath = "private.pem.key"                             # <Thing_Name>.private.key
@@ -437,7 +437,7 @@ def on_message(client, userdata, msg):                  # Func for Sending msg
 mqttc = paho.Client()                                   # mqttc object
 mqttc.on_connect = on_connect                           # assign on_connect func
 mqttc.on_message = on_message                           # assign on_message func
-#mqttc.tls_set(caPath, certfile=certPath, keyfile=keyPath, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)  # pass parameters
+mqttc.tls_set("/etc/mosquitto/ca_certificates/ca.crt")  # pass parameters
 mqttc.username_pw_set("yolanda", password = "123456")
 mqttc.connect(host, port, keepalive=60)                 # connect to aws server
 mqttc.loop_start()                                      # Start the loop
