@@ -419,6 +419,7 @@ import argparse
 import threading
 import json
 import paho.mqtt.client as paho
+import datetime
 
 host = "jc_pi" #"127.0.0.1"  # Endpoint
 username = "yolanda"
@@ -458,8 +459,9 @@ def printInfoFromSensorTag(name, Peripheral):
     counter = 1
     while True:
         now = int(round(time.time()*1000))
-        local_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(now/1000))
-        newInfo = {"detected_time": local_time, "tag": name, "temperature": tag.IRtemperature.read(), "humidity": tag.humidity.read(), "barometer": tag.barometer.read(), "light": tag.lightmeter.read()}
+        #local_time = time.strftime('%Y-%m-%dT%H:%M:%SZ', datetime.datetime.now()-datetime.timedelta(days=1))# time.localtime()-datetime.timedelta(days=1)) #now/1000
+        local_time = (datetime.datetime.now()-datetime.timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%SZ')
+        newInfo = {"detected_time": local_time, "tag": name, "temperature": tag.IRtemperature.read()[1], "air_temperature": tag.barometer.read()[0], "humidity": tag.humidity.read()[1], "barometer": tag.barometer.read()[1], "light": tag.lightmeter.read()}
         print(json.dumps(newInfo))
         mqttc.publish("tag", json.dumps(newInfo))
         counter += 1
